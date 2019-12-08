@@ -11,7 +11,7 @@ namespace livraria.Models
 
         public DbSet<Livro> Livros { get; set; }
         public DbSet<Comentario> Comentarios { get; set; }
-        public DbSet<Carrinho> Carrinho { get; set; }
+        public DbSet<Carrinho> Carrinhos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
 
     }
