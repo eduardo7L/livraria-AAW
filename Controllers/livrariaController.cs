@@ -46,7 +46,7 @@ namespace livraria.Controllers
                 
                 Carrinho carrinho =  new Carrinho();
                 carrinho.Livros.AddRange(new List<Livro>(){ OAlienista, DomCasmurro});
-                Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Carrinho> entityEntry = _context.Carrinho.Add(carrinho);
+                Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Carrinho> entityEntry = _context.Carrinhos.Add(carrinho);
                 _context.SaveChanges();
             }
         }
@@ -73,10 +73,10 @@ namespace livraria.Controllers
         }
 
          // GET: api/livraria/5
-        [HttpGet("GetCarrinho")]
-        public async Task<ActionResult<IEnumerable<Carrinho>>> GetCarrinho()
+        [HttpGet("GetCarrinhos")]
+        public async Task<ActionResult<IEnumerable<Carrinho>>> GetCarrinhos()
         {
-            return await _context.Carrinho.ToListAsync();
+            return await _context.Carrinhos.ToListAsync();
         }
         
         [HttpGet("GetLivroPeloNome/{nome}")]
@@ -105,10 +105,10 @@ namespace livraria.Controllers
             return livros;
         }
 
-        [HttpGet("FecharPedido")]
-        public async Task<ActionResult<IEnumerable<Livro>>> FecharPedido()
+        [HttpGet("FecharPedido/{idCarrinho}")]
+        public async Task<ActionResult<IEnumerable<Livro>>> FecharPedido(int idCarrinho)
         {
-            Carrinho carrinho = _context.Carrinho.FirstOrDefault();
+            Carrinho carrinho = _context.Carrinhos.Where(e => e.Id == idCarrinho).FirstOrDefault();
 
             Pedido pedido = new Pedido();
             pedido.Livros = carrinho.Livros;
@@ -172,8 +172,8 @@ namespace livraria.Controllers
             return NoContent();
         }
 
-        [HttpPut("PutLivroNoCarrinho/{id}")]
-        public async Task<IActionResult> PutLivroNoCarrinho(int id)
+        [HttpPut("PutLivroNoCarrinho/{id}/{idCarrinho}")]
+        public async Task<IActionResult> PutLivroNoCarrinho(int id, int idCarrinho)
         {
             var livro = await _context.Livros.FindAsync(id);
 
@@ -182,7 +182,7 @@ namespace livraria.Controllers
                 return NotFound();
             }
 
-            Carrinho carrinho = _context.Carrinho.FirstOrDefault();
+            Carrinho carrinho = _context.Carrinhos.Where(e => e.Id == idCarrinho).FirstOrDefault();
             carrinho.Livros.Add(livro);
 
             _context.Entry(carrinho).State = EntityState.Modified;
